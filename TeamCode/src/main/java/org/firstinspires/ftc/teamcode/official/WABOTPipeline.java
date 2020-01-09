@@ -10,9 +10,14 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 public class WABOTPipeline extends OpenCvPipeline {
 
+    // Our mats
     Mat convert = new Mat(), rect1 = new Mat(), rect2 = new Mat(), rect3 = new Mat();
 
+    // Our translation variables
     final double offsetX = 0, offsetY = 60, scaleX = 10;
+
+    // Threshold for detecting a block
+    private final double BRIGHTNESS_THRESHOLD = 5;
 
     @Override
     public Mat processFrame(Mat input) {
@@ -35,12 +40,12 @@ public class WABOTPipeline extends OpenCvPipeline {
         double middleBlockV = Core.mean(rect1).val[0];
         double rightBlockV = Core.mean(rect2).val[0];
 
-        if(leftBlockV < rightBlockV && leftBlockV < middleBlockV){
-            Imgproc.putText(input, "Left Block Found", new Point(100, 100), 1, 2, new Scalar(100, 0, 0));
-        } else if(rightBlockV < leftBlockV && rightBlockV < middleBlockV){
+        if(leftBlockV < rightBlockV && leftBlockV < middleBlockV && leftBlockV > BRIGHTNESS_THRESHOLD){
+            Imgproc.putText(input, "Left Block Found", new Point(100, 100), 1, 2, new Scalar(100, 0, 0), 5);
+        } else if(rightBlockV < leftBlockV && rightBlockV < middleBlockV && rightBlockV > BRIGHTNESS_THRESHOLD){
             Imgproc.putText(input, "Right Block Found", new Point(100, 100), 1, 2, new Scalar(100, 0, 0));
-        } else if(middleBlockV < rightBlockV && middleBlockV < leftBlockV){
-            Imgproc.putText(input, "Middle Block Found", new Point(100, 100), 1, 2, new Scalar(100, 0, 0));
+        } else if(middleBlockV < rightBlockV && middleBlockV < leftBlockV && middleBlockV > BRIGHTNESS_THRESHOLD){
+            Imgproc.putText(input, "Middle Block Found", new Point(100, 100), 1, 2, new Scalar(100, 0, 0), 5);
         }
 
         Imgproc.rectangle(input, new Point(colStart, rowStart), new Point(colEnd, rowEnd), new Scalar(230, 100, 50), 3);

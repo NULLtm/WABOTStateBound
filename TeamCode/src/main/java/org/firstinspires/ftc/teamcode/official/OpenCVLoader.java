@@ -15,20 +15,27 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.Locale;
 
-public class DogeCV {
+public class OpenCVLoader {
     private OpenCvCamera phoneCam;
     private WABOTPipeline skyStoneDetector;
     private HardwareMap map;
     private Point translation = null;
+    private final boolean RUN_ON_APP;
 
-    public DogeCV(HardwareMap map){
+    public OpenCVLoader(HardwareMap map, boolean RUN_ON_APP){
         this.map = map;
+        this.RUN_ON_APP = RUN_ON_APP;
         init();
     }
 
     public void init() {
         int cameraMonitorViewId = map.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", map.appContext.getPackageName());
-        phoneCam = OpenCvCameraFactory.getInstance().createWebcam(map.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        if(RUN_ON_APP){
+            phoneCam = OpenCvCameraFactory.getInstance().createWebcam(map.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        } else {
+            phoneCam = OpenCvCameraFactory.getInstance().createWebcam(map.get(WebcamName.class, "Webcam 1"));
+        }
 
         phoneCam.openCameraDevice();
 

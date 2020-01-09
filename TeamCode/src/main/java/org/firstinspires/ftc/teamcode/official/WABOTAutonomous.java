@@ -98,24 +98,6 @@ public class WABOTAutonomous extends LinearOpMode {
 
         runEncoder(true);
 
-
-        // Setting servo positions
-        h.leftFound.setPosition(1f);
-        h.rightFound.setPosition(0.5f);
-        //h.backArm.setPosition(0f);
-        //h.frontArm.setPosition(1f);
-        //h.leftIntakeServo.setPosition(1f);
-        //h.rightIntakeServo.setPosition(0.558);
-
-        vuforia = new WABOTVuforia(VUFORIA_KEY, CAMERA_DIRECTION, hardwareMap, true, CAMERA_IS_PORTRAIT, h);
-
-        vuforia.activate();
-
-        telemetry.addLine("Status: Imu");
-        telemetry.update();
-
-        imu = new WABOTImu(hardwareMap);
-
         telemetry.addLine("Status: READY!");
         telemetry.update();
 

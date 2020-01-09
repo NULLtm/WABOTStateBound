@@ -18,8 +18,6 @@ public class WABOTHardware {
     final double RIGHTARMSERVO_IN = 1;
     final double RIGHTARMSERVO_OUT = 0.5;
 
-    // 850-2150 RANGE
-
     public DcMotor FLMotor;
     public DcMotor FRMotor;
     public DcMotor BLMotor;
@@ -28,7 +26,6 @@ public class WABOTHardware {
     public DcMotor RIntake;
     public Servo leftFound;
     public Servo rightFound;
-    public WebcamName webcam;
     public DcMotor slideArm;
     public Servo LArmServo;
     public Servo RArmServo;
@@ -45,10 +42,8 @@ public class WABOTHardware {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
         FLMotor = hardwareMap.get(DcMotor.class, "FLMotor");
         FRMotor = hardwareMap.get(DcMotor.class, "FRMotor");
-        //touch = hardwareMap.get(RevTouchSensor.class, "touch");
         BLMotor = hardwareMap.get(DcMotor.class, "BLMotor");
         BRMotor = hardwareMap.get(DcMotor.class, "BRMotor");
         slideArm = hardwareMap.get(DcMotor.class, "slideArm");

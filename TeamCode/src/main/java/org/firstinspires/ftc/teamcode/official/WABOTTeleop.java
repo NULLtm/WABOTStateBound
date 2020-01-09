@@ -26,27 +26,10 @@ public class  WABOTTeleop extends OpMode {
     // Declare OpMode members.
     WABOTHardware h;
 
-    private RoutableRobot robot;
-
-    // IMU
-    WABOTImu imu;
-
-    private WABOTVuforia vuforia;
-
-    private final String VUFORIA_KEY = "ATs85vP/////AAABmedvSEuRQ0j9uYwlATaryQxyeVF6AtDWjTZ/2e6s8KELjPp1fDUV3Nn3X1xEZSoPk0Y81/6kr2k/8Q0xdlNkCDIJ+qBpXM8vpA+5qL7mYY6KthDalcBqD8pKiEBiSy0gW0wzniDtDR/Bf4ndSizQgoI10u9PD248vTfkt8NxJLsgM98pyCyeYZ2c16yLcASypCOhFJvljA7M6DM+qfWgWnOWXiVd2OZLsLtFcHZu4aEKjCHwqnlk9KYSI5BT8I4i+3FoE/JffsIzAl/iXMPu7w6eJJXYqNq7lGCzMRwfn+6OoYA51sy/Ahr/uyWUj/u0nzgF/IlRkteKXks+eUok5kFLeT2KxkbpNVwie11YgQRg";
-    private final VuforiaLocalizer.CameraDirection CAMERA_DIRECTION = VuforiaLocalizer.CameraDirection.BACK;
-    private final boolean CAMERA_IS_PORTRAIT = false;
-
     // Intermediate values for input
-    double as1 = 0;
-    double as2 = 0.178;
-    double as3 = 0.8;
     float intakePow = 0;
 
-    private DogeCV detector;
-
-    double servoPosLeft = 0.8;
-    double servoPosRight = 0.5;
+    private OpenCVLoader detector;
 
     // Speed modifier for drive controls
     private final double PRECISION_SPEED_MODIFIER = 0.5;
@@ -56,19 +39,15 @@ public class  WABOTTeleop extends OpMode {
      */
     @Override
     public void init() {
-
-        //robot = new RoutableRobot();
-        // Tell the driver that initialization is complete.
         h = new WABOTHardware(hardwareMap);
+
         runEncoder(true);
+
         //imu = new WABOTImu(hardwareMap);
 
-        detector = new DogeCV(hardwareMap);
+        detector = new OpenCVLoader(hardwareMap, true);
 
-        //vuforia = new WABOTVuforia(VUFORIA_KEY, CAMERA_DIRECTION, hardwareMap, true, CAMERA_IS_PORTRAIT, h);
-
-        //vuforia.activate();
-        //telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status:", "Initialized");
 
         detector.startStreaming();
     }
@@ -86,8 +65,6 @@ public class  WABOTTeleop extends OpMode {
     @Override
     public void start() {
         // Starting Positions for Servos
-        //imu.activate();
-
         h.LArmServo.setPosition(h.LEFTARMSERVO_IN);
         h.RArmServo.setPosition(h.RIGHTARMSERVO_IN);
     }
@@ -97,26 +74,13 @@ public class  WABOTTeleop extends OpMode {
      */
     @Override
     public void loop() {
-        // Gamepad2 input
+        // Gamepad input
         input();
-        //telemetry.addData("PATH: ", robot.initPointsFromFile());
+
         // Drive train controls
         superDrive();
 
-        telemetry.addData("ENCODER WHEEL POSITION: ", h.BLMotor.getCurrentPosition());
-
-//        double newX = Math.cos(Math.toRadians(getNeatRotation(imu.getHeading())))*h.FLMotor.getCurrentPosition()*0.001;
-//        double newY = Math.sin(getNeatRotation(Math.toRadians(getNeatRotation(imu.getHeading())) ))*h.FLMotor.getCurrentPosition()*0.001;
-//        telemetry.addData("X MOVEMENT:", newX);
-//        telemetry.addData("Y MOVEMENT:", newY);
-    }
-
-    private double getNeatRotation(double heading){
-        if(heading < 0){
-            heading += 360;
-        }
-
-        return heading;
+        telemetry.addData("CURRENT ENCODER WHEEL POSITION: ", h.BLMotor.getCurrentPosition());
     }
 
     /*
@@ -135,18 +99,6 @@ public class  WABOTTeleop extends OpMode {
     }
 
     private void input(){
-
-        //telemetry.addData("Heading: ", imu.getHeading());
-        //telemetry.addData("Distance Side: ", getAverageDistance());
-
-        /*if(!vuforia.run().equals("NULL")) {
-            telemetry.addData("POS Z: ", vuforia.position.z);
-            telemetry.addData("POS Y: ", vuforia.position.y);
-            telemetry.addData("POS X: ", vuforia.position.x);
-            telemetry.addData("Z ROT: ", vuforia.rotationP.z);
-        }*/
-
-
         // Triggers control intake/outtake
         if(gamepad1.right_trigger > 0){
             intakePow = gamepad1.right_trigger;
@@ -227,25 +179,6 @@ public class  WABOTTeleop extends OpMode {
             h.BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-    }
-
-    @Deprecated
-    public double getAverageDistance(){
-        /*double d = h.ods.getDistance(DistanceUnit.CM)+ h.ods3.getDistance(DistanceUnit.CM);
-        d /= 2;
-
-        double ratio = h.ods.getDistance(DistanceUnit.CM) / h.ods3.getDistance(DistanceUnit.CM) * 100;
-
-        if(ratio < 75 || ratio > 125){
-            if(h.ods.getDistance(DistanceUnit.CM) > h.ods3.getDistance(DistanceUnit.CM)){
-                return h.ods3.getDistance(DistanceUnit.CM);
-            } else {
-                return h.ods.getDistance(DistanceUnit.CM);
-            }
-        } else {
-            return d;
-        }*/
-        return 0;
     }
 
     // Tank drive controls
