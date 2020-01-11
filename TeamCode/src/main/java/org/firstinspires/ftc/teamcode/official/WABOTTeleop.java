@@ -41,7 +41,8 @@ public class  WABOTTeleop extends OpMode {
     public void init() {
         h = new WABOTHardware(hardwareMap);
 
-        runEncoder(true);
+        runExternalEncoders(true);
+
 
         //imu = new WABOTImu(hardwareMap);
 
@@ -80,7 +81,12 @@ public class  WABOTTeleop extends OpMode {
         // Drive train controls
         superDrive();
 
-        telemetry.addData("CURRENT ENCODER WHEEL POSITION: ", h.BLMotor.getCurrentPosition());
+        // TODO: Uncomment once ready to test encoders
+        telemetry.addData("LEFT ENCODER: ", h.getLeftEncoderPos() / 1440);
+        telemetry.addData("RIGHT ENCODER: ", h.getRightEncoderPos() / 1440);
+        telemetry.addData("STRAFE ENCODER: ", h.getStrafeEncoderPos() / 1440);
+
+        //telemetry.addData("Current LEFT BLOCK ZONE BRIGHTNESS:", WABOTPipeline.currentBrightness);
     }
 
     /*
@@ -150,11 +156,19 @@ public class  WABOTTeleop extends OpMode {
             h.RArmServo.setPosition(h.RIGHTARMSERVO_OUT);
         }
 
+        if(gamepad2.dpad_down){
+            h.capServo.setPosition(h.CAPSERVO_IN);
+        }
+        if(gamepad2.dpad_up){
+            h.capServo.setPosition(h.CAPSERVO_OUT);
+        }
+
         if(gamepad1.x){
             h.leftFound.setPosition(0.5f);
             h.rightFound.setPosition(1f);
         }
 
+        //DOWN
         if(gamepad1.b){
             h.leftFound.setPosition(1f);
             h.rightFound.setPosition(0.5f);
@@ -179,6 +193,15 @@ public class  WABOTTeleop extends OpMode {
             h.BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
+    }
+
+    private void runExternalEncoders(boolean run){
+        h.slideArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.RIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.LIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.slideArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        h.RIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        h.LIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     // Tank drive controls

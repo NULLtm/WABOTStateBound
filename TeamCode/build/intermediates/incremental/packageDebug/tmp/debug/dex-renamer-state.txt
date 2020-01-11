@@ -1,4 +1,13 @@
-#Wed Jan 08 17:21:14 PST 2020
-base.0=C\:\\Users\\Wrightang\\Documents\\GitHub\\6427Good\\TeamCode\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
+#Fri Jan 10 21:09:41 PST 2020
+path.3=classes_0.dex
+path.2=classes2.dex
+path.1=classes.dex
 path.0=classes.dex
+renamed.3=classes4.dex
+renamed.2=classes3.dex
+renamed.1=classes2.dex
 renamed.0=classes.dex
+base.3=C\:\\Users\\Wrightang\\Documents\\GitHub\\BIGBOYZ\\TeamCode\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\out\\classes_0.dex
+base.2=C\:\\Users\\Wrightang\\Documents\\GitHub\\BIGBOYZ\\TeamCode\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\out\\classes2.dex
+base.1=C\:\\Users\\Wrightang\\Documents\\GitHub\\BIGBOYZ\\TeamCode\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\out\\classes.dex
+base.0=C\:\\Users\\Wrightang\\Documents\\GitHub\\BIGBOYZ\\TeamCode\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\out\\classes.dex

@@ -34,17 +34,18 @@ public class WABOTAutonomous extends LinearOpMode {
     private final double PRECISION_SPEED_MODIFIER = 0.5;
 
     // This provides the tick count for each rotation of an encoder, it's helpful for using run to position
-    private final int ENCODER_TICK = 1680;
+    private final int ENCODER_TICK = 1440;
     // ANDYMARK 60:1 = 1680
+    // US DIGITAL ENCODER = 1440
 
     // Conversion constants
     private final double CM_PER_INCH = 2.56;
     private final double CM_PER_FOOT = 30.48;
 
-    // Wheel diameter NOTE: Measured in cm
-    private final double DIAMETER = CM_PER_INCH * 5.15;
+    // Wheel diameter NOTE: Measured in inch
+    private final double DIAMETER = 4;
 
-    // This value is the distance of 1 rev of the wheels measured in CM!!!!
+    // This value is the distance of 1 rev of the wheels measured in INCH!!!!
     private final double CIRCUMFERENCE = Math.PI*DIAMETER;
 
     // Our custom vuforia object
@@ -96,14 +97,21 @@ public class WABOTAutonomous extends LinearOpMode {
 
         h = new WABOTHardware(hardwareMap);
 
+        imu = new WABOTImu(hardwareMap);
+
         runEncoder(true);
+        runExternalEncoders(true);
+
+        h.LArmServo.setPosition(h.LEFTARMSERVO_IN);
+        h.RArmServo.setPosition(h.RIGHTARMSERVO_IN);
+
+        h.leftFound.setPosition(h.LEFTFOUND_UP);
+        h.rightFound.setPosition(h.RIGHTFOUND_UP);
 
         telemetry.addLine("Status: READY!");
         telemetry.update();
 
         waitForStart();
-
-        imu.activate();
 
         run();
     }
@@ -116,196 +124,12 @@ public class WABOTAutonomous extends LinearOpMode {
 
     // Actual instructions for robot! All autonomous code goes here!!!
     private void run(){
-
-        // SKYSTONE AUTO
-        // DISTANCE: 35
-        // OFFSET -112
-
-        strafeLinear(1, 1.0f);
-
-        while (getAverageDistance() > 39) {
-
-        }
-
-        strafeLinear(1, 0.3f);
-
-        while (getAverageDistance() > 35) {
-
-        }
-
-        stopMotors();
-
-        goToHeading(0);
-
-        sleep(1000);
-
-        int newPos = 0;
-        int blockNumber = 1;
-
-        if (vuforia.run().equals("NULL")) {
-            newPos = -120;
-            while (vuforia.run().equals("NULL") && blockNumber < 6) {
-                blockNumber++;
-                telemetry.addData("Searching... Block #:", blockNumber);
-                telemetry.update();
-                if(blockNumber == 6){
-                    runToPos(1.5*CM_PER_INCH, 0.3f);
-                } else {
-                    runToPos(7 * CM_PER_INCH, 0.8f);
-                }
-                sleep(1000);
-            }
-        } else {
-            newPos = 85;
-        }
-
-        // 85 BACK ARM
-        // -120 FRONT ARM
-
-        while (!vuforia.run().equals("NULL") && Math.abs(vuforia.position.y - (newPos)) > 5) {
-
-            float power;
-            if (Math.abs(vuforia.position.y - (newPos)) > 50) {
-                power = 0.3f;
-            } else
-                power = 0.1f;
-
-            if (vuforia.position.y > newPos) {
-                linearDrive(-power);
-            }
-            if (vuforia.position.y < newPos) {
-                linearDrive(power);
-            }
-        }
-
-        stopMotors();
-
-        strafeLinear(1, 0.6f);
-
-        while (getAverageDistance() > 10) {
-
-        }
-
-        strafeLinear(1, 0.2f);
-
-        while (getAverageDistance() > 2) {
-
-        }
-
-        stopMotors();
-
-        if (newPos == -120) {
-            //h.frontArm.setPosition(0);
-        } else {
-           // h.backArm.setPosition(1);
-        }
-
-        sleep(500);
-
-        strafe(-35, 0.5f);
-
-        runToPos(-180, 1.0f);
-
-        //h.frontArm.setPosition(1);
-        //h.backArm.setPosition(0);
+        runDistanceOdometer(-29.25, 0.3);
 
         sleep(100);
 
-        if(blockNumber != 6){
-            runToPos(180 + (24*CM_PER_INCH), 1.0f);
-
-            vuforia.clearVu();
-
-            goToHeading(0);
-
-            sleep(500);
-
-            strafeLinear(1, 0.8f);
-
-            while (getAverageDistance() > 39) {
-
-            }
-
-            strafeLinear(1, 0.3f);
-
-            while (getAverageDistance() > 35) {
-
-            }
-
-            stopMotors();
-
-        /*if (vuforia.run().equals("NULL")) {
-            newPos = -115;
-            while (vuforia.run().equals("NULL")) {
-                blockNumber++;
-                telemetry.addData("Searching... Block #:", blockNumber);
-                telemetry.update();
-                if(blockNumber == 6){
-                    runToPos(4 * CM_PER_INCH, 0.8f);
-                } else {
-                    runToPos(8 * CM_PER_INCH, 0.8f);
-                }
-                sleep(1000);
-            }
-        } else {
-            newPos = 90;
-        }*/
-
-        /*while (!vuforia.run().equals("NULL") && Math.abs(vuforia.position.y - (newPos)) > 5) {
-
-            float power;
-            if (Math.abs(vuforia.position.y - (newPos)) > 50) {
-                power = 0.3f;
-            } else
-                power = 0.1f;
-
-            if (vuforia.position.y > newPos) {
-                linearDrive(-power);
-            }
-            if (vuforia.position.y < newPos) {
-                linearDrive(power);
-            }
-        }
-
-        stopMotors();*/
-
-            sleep(500);
-
-            strafeLinear(1, 0.6f);
-
-            while (getAverageDistance() > 10) {
-
-            }
-
-            strafeLinear(1, 0.2f);
-
-            while (getAverageDistance() > 2) {
-
-            }
-
-            stopMotors();
-
-            if (newPos == -120) {
-                //h.frontArm.setPosition(0);
-            } else {
-                //h.backArm.setPosition(1);
-            }
-
-            sleep(500);
-
-            strafe(-35, 0.5f);
-
-            runToPos(-180, 1.0f);
-
-            //h.frontArm.setPosition(1);
-            //h.backArm.setPosition(0);
-
-            sleep(100);
-
-            runToPos(50, 1.0f);
-        } else {
-            runToPos(50, 1.0f);
-        }
+        h.leftFound.setPosition(h.LEFTFOUND_DOWN);
+        h.rightFound.setPosition(h.RIGHTFOUND_DOWN);
     }
 
 
@@ -340,23 +164,14 @@ public class WABOTAutonomous extends LinearOpMode {
 
 
 
-    @Deprecated
-    public double getAverageDistance(){
-        /*double d = h.ods.getDistance(DistanceUnit.CM)+ h.ods3.getDistance(DistanceUnit.CM);
-        d /= 2;
 
-        double ratio = h.ods.getDistance(DistanceUnit.CM) / h.ods3.getDistance(DistanceUnit.CM) * 100;
-
-        if(ratio < 75 || ratio > 125){
-            if(h.ods.getDistance(DistanceUnit.CM) > h.ods3.getDistance(DistanceUnit.CM)){
-                return h.ods3.getDistance(DistanceUnit.CM);
-            } else {
-                return h.ods.getDistance(DistanceUnit.CM);
-            }
-        } else {
-            return d;
-        }*/
-        return 0;
+    private void runExternalEncoders(boolean run){
+        h.slideArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.RIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.LIntake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        h.slideArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        h.RIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        h.LIntake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 
@@ -481,6 +296,23 @@ public class WABOTAutonomous extends LinearOpMode {
 
 
 
+    private void runDistanceOdometer(double distanceINCH, double power){
+        double revs = distanceINCH*2.2/CIRCUMFERENCE;
+        int ticksToRun = (int)(revs * ENCODER_TICK);
+
+        while(Math.abs(h.getRightEncoderPos()-ticksToRun) > 300){
+            h.FLMotor.setPower(power*(ticksToRun/Math.abs(ticksToRun)));
+            h.FRMotor.setPower(power*(ticksToRun/Math.abs(ticksToRun)));
+            h.BLMotor.setPower(power*(ticksToRun/Math.abs(ticksToRun)));
+            h.BRMotor.setPower(power*(ticksToRun/Math.abs(ticksToRun)));
+        }
+    }
+
+    private double getNetForward(){
+        double net = (h.getLeftEncoderPos()+h.getRightEncoderPos()) / 2;
+
+        return net;
+    }
 
 
 

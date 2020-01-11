@@ -88,7 +88,7 @@ public class WABOTVuforia {
         // https://developer.vuforia.com/license-manager
         parameters.vuforiaLicenseKey = key;
 
-        WebcamName cam = myMap.webcam;
+        WebcamName cam = null; //myMap.webcam;
 
         //parameters.cameraDirection = camDir;
 

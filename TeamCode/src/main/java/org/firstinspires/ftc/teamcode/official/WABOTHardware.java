@@ -13,10 +13,24 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 public class WABOTHardware {
     private HardwareMap hardwareMap;
 
-    final double LEFTARMSERVO_IN = 0.2;
+    final double LEFTARMSERVO_IN = 0.5;
     final double LEFTARMSERVO_OUT = 0.7;
-    final double RIGHTARMSERVO_IN = 1;
+    final double RIGHTARMSERVO_IN = 0.8;
     final double RIGHTARMSERVO_OUT = 0.5;
+
+    final double LEFTFOUND_DOWN = 1f;
+    final double LEFTFOUND_UP = 0.5f;
+    final double RIGHTFOUND_DOWN = 0.5f;
+    final double RIGHTFOUND_UP = 1f;
+
+    final double FRONTARMARMSERVO_IN = 0.5;
+    final double FRONTARMARMSERVO_OUT = 1;
+
+    final double BACKARMSERVO_IN = 0.9;
+    final double BACKARMSERVO_OUT = 0;
+
+    final double CAPSERVO_IN = 0.3;
+    final double CAPSERVO_OUT = 0.7; //todo find positions
 
     public DcMotor FLMotor;
     public DcMotor FRMotor;
@@ -26,11 +40,14 @@ public class WABOTHardware {
     public DcMotor RIntake;
     public Servo leftFound;
     public Servo rightFound;
-    public DcMotor slideArm;
-    public Servo LArmServo;
-    public Servo RArmServo;
-    public DcMotor liftMotor;
-
+    public DcMotor slideArm; //horizontal slide
+    public Servo LArmServo; //stone grabber servos
+    public Servo RArmServo; //stone grabber servo
+    public DcMotor liftMotor; //vertical slides
+    public Servo capServo;
+    public DcMotor leftEncoder;
+    public DcMotor rightEncoder;
+    //public DcMotor strafeEncoder;
 
 //hi owen
 //you're adopted
@@ -54,6 +71,9 @@ public class WABOTHardware {
         RArmServo = hardwareMap.get(Servo.class, "RArmServo");
         leftFound = hardwareMap.get(Servo.class, "leftFound");
         rightFound = hardwareMap.get(Servo.class, "rightFound");
+        capServo = hardwareMap.get(Servo.class, "capServo");
+        //leftEncoder = hardwareMap.get(DcMotor.class, "leftEncoder");
+        //rightEncoder = hardwareMap.get(DcMotor.class, "rightEncoder");
 
 
 
@@ -64,5 +84,17 @@ public class WABOTHardware {
         BLMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         FRMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         FLMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+    }
+
+    public double getRightEncoderPos(){
+        return RIntake.getCurrentPosition();
+    }
+
+    public double getLeftEncoderPos(){
+        return slideArm.getCurrentPosition();
+    }
+
+    public double getStrafeEncoderPos(){
+        return LIntake.getCurrentPosition();
     }
 }
