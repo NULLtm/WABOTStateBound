@@ -29,10 +29,13 @@ public class  WABOTTeleop extends OpMode {
     // Intermediate values for input
     float intakePow = 0;
 
-    private OpenCVLoader detector;
+    //private OpenCVLoader detector;
 
     // Speed modifier for drive controls
     private final double PRECISION_SPEED_MODIFIER = 0.5;
+
+
+    private WABOTImu imu;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -41,16 +44,18 @@ public class  WABOTTeleop extends OpMode {
     public void init() {
         h = new WABOTHardware(hardwareMap);
 
-        runExternalEncoders(true);
+        //runExternalEncoders(true);
+
+        runEncoder(false);
 
 
         //imu = new WABOTImu(hardwareMap);
 
-        detector = new OpenCVLoader(hardwareMap, true);
+        //detector = new OpenCVLoader(hardwareMap, true);
 
         telemetry.addData("Status:", "Initialized");
 
-        detector.startStreaming();
+        //detector.startStreaming();
     }
 
     /*
@@ -82,9 +87,11 @@ public class  WABOTTeleop extends OpMode {
         superDrive();
 
         // TODO: Uncomment once ready to test encoders
-        telemetry.addData("LEFT ENCODER: ", h.getLeftEncoderPos() / 1440);
-        telemetry.addData("RIGHT ENCODER: ", h.getRightEncoderPos() / 1440);
-        telemetry.addData("STRAFE ENCODER: ", h.getStrafeEncoderPos() / 1440);
+        //telemetry.addData("LEFT ENCODER: ", h.getLeftEncoderPos() / 1440);
+
+        //telemetry.addData("IMU: ", imu.getHeading());
+        //telemetry.addData("RIGHT ENCODER: ", h.getRightEncoderPos() / 1440);
+        //telemetry.addData("STRAFE ENCODER: ", h.getStrafeEncoderPos() / 1440);
 
         //telemetry.addData("Current LEFT BLOCK ZONE BRIGHTNESS:", WABOTPipeline.currentBrightness);
     }
@@ -117,19 +124,19 @@ public class  WABOTTeleop extends OpMode {
         h.RIntake.setPower(intakePow);
 
         double liftPower = -gamepad2.right_stick_y;
-        double armSlidePower = -gamepad2.left_stick_y;
+        double armSlidePower = gamepad2.left_stick_y;
 
         if(gamepad2.left_bumper && !gamepad2.right_bumper){
             liftPower *= 0.5;
-            armSlidePower *= 0.5;
+            //armSlidePower *= 0.5;
         }
         if(gamepad2.right_bumper && !gamepad2.left_bumper){
             liftPower *= 0.5;
-            armSlidePower *= 0.5;
+            //armSlidePower *= 0.5;
         }
         if(gamepad2.right_bumper && gamepad2.left_bumper){
             liftPower *= 0.25;
-            armSlidePower *= 0.25;
+            //armSlidePower *= 0.25;
         }
 
         h.slideArm.setPower(armSlidePower);
@@ -147,11 +154,11 @@ public class  WABOTTeleop extends OpMode {
 //        telemetry.addData("Servo Pos LEFT: ", servoPosLeft);
 //        telemetry.addData("Servo Pos RIGHT: ", servoPosRight);
 
-        if(gamepad2.a){
+        if(gamepad2.x){
             h.LArmServo.setPosition(h.LEFTARMSERVO_IN);
             h.RArmServo.setPosition(h.RIGHTARMSERVO_IN);
         }
-        if(gamepad2.b){
+        if(gamepad2.y){
             h.LArmServo.setPosition(h.LEFTARMSERVO_OUT);
             h.RArmServo.setPosition(h.RIGHTARMSERVO_OUT);
         }

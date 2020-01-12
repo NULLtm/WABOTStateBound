@@ -29,8 +29,8 @@ public class WABOTHardware {
     final double BACKARMSERVO_IN = 0.9;
     final double BACKARMSERVO_OUT = 0;
 
-    final double CAPSERVO_IN = 0.3;
-    final double CAPSERVO_OUT = 0.7; //todo find positions
+    final double CAPSERVO_IN = 0.9;
+    final double CAPSERVO_OUT = 0.4; //todo find positions
 
     public DcMotor FLMotor;
     public DcMotor FRMotor;
