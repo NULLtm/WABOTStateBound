@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.official;
  * Wright Angle Robotics #6427 2019-2020
  */
 
+import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,18 +25,20 @@ public class  WABOTTeleop extends OpMode {
 
 
     // Declare OpMode members.
-    WABOTHardware h;
+    private WABOTHardware h;
+
+    private WABOTController controller;
+
+    private boolean xHasToggle = false;
+    private boolean xHasToggle2 = false;
+    private boolean hasStartedCap = false;
+    private long capTime;
 
     // Intermediate values for input
-    float intakePow = 0;
-
-    //private OpenCVLoader detector;
+    private float intakePow = 0;
 
     // Speed modifier for drive controls
     private final double PRECISION_SPEED_MODIFIER = 0.5;
-
-
-    private WABOTImu imu;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -44,18 +47,11 @@ public class  WABOTTeleop extends OpMode {
     public void init() {
         h = new WABOTHardware(hardwareMap);
 
-        //runExternalEncoders(true);
+        controller = new WABOTController(gamepad1, gamepad2);
 
         runEncoder(false);
 
-
-        //imu = new WABOTImu(hardwareMap);
-
-        //detector = new OpenCVLoader(hardwareMap, true);
-
         telemetry.addData("Status:", "Initialized");
-
-        //detector.startStreaming();
     }
 
     /*
@@ -85,15 +81,6 @@ public class  WABOTTeleop extends OpMode {
 
         // Drive train controls
         superDrive();
-
-        // TODO: Uncomment once ready to test encoders
-        //telemetry.addData("LEFT ENCODER: ", h.getLeftEncoderPos() / 1440);
-
-        //telemetry.addData("IMU: ", imu.getHeading());
-        //telemetry.addData("RIGHT ENCODER: ", h.getRightEncoderPos() / 1440);
-        //telemetry.addData("STRAFE ENCODER: ", h.getStrafeEncoderPos() / 1440);
-
-        //telemetry.addData("Current LEFT BLOCK ZONE BRIGHTNESS:", WABOTPipeline.currentBrightness);
     }
 
     /*
@@ -142,43 +129,35 @@ public class  WABOTTeleop extends OpMode {
         h.slideArm.setPower(armSlidePower);
         h.liftMotor.setPower(liftPower);
 
-
-        // TESTING SERVO POSITIONS
-
-//        servoPosLeft += gamepad2.right_stick_y*0.008;
-//        servoPosRight += gamepad2.left_stick_y*0.008;
-//
-//        h.leftIntakeServo.setPosition(servoPosLeft);
-//        h.rightIntakeServo.setPosition(servoPosRight);
-//
-//        telemetry.addData("Servo Pos LEFT: ", servoPosLeft);
-//        telemetry.addData("Servo Pos RIGHT: ", servoPosRight);
-
-        if(gamepad2.x){
-            h.LArmServo.setPosition(h.LEFTARMSERVO_IN);
-            h.RArmServo.setPosition(h.RIGHTARMSERVO_IN);
-        }
-        if(gamepad2.y){
+        if(controller.returnToggleX(gamepad2) && !xHasToggle2){
             h.LArmServo.setPosition(h.LEFTARMSERVO_OUT);
             h.RArmServo.setPosition(h.RIGHTARMSERVO_OUT);
+            xHasToggle2 = true;
+        } else if(controller.returnToggleX(gamepad2) && xHasToggle2){
+            h.LArmServo.setPosition(h.LEFTARMSERVO_IN);
+            h.RArmServo.setPosition(h.RIGHTARMSERVO_IN);
+            xHasToggle2 = false;
         }
 
-        if(gamepad2.dpad_down){
-            h.capServo.setPosition(h.CAPSERVO_IN);
-        }
-        if(gamepad2.dpad_up){
+        if(controller.returnToggleDPadDown(gamepad2) && !hasStartedCap){
             h.capServo.setPosition(h.CAPSERVO_OUT);
+            hasStartedCap = true;
+            capTime = System.currentTimeMillis();
+        }
+        if(hasStartedCap && System.currentTimeMillis()-capTime > 500){
+            h.capServo.setPosition(h.CAPSERVO_IN);
+            hasStartedCap = false;
         }
 
-        if(gamepad1.x){
+        // Toggleable
+        if(controller.returnToggleX(gamepad1) && xHasToggle){
             h.leftFound.setPosition(0.5f);
             h.rightFound.setPosition(1f);
-        }
-
-        //DOWN
-        if(gamepad1.b){
+            xHasToggle = false;
+        } else if(controller.returnToggleX(gamepad1) && !xHasToggle){
             h.leftFound.setPosition(1f);
             h.rightFound.setPosition(0.5f);
+            xHasToggle = true;
         }
     }
 

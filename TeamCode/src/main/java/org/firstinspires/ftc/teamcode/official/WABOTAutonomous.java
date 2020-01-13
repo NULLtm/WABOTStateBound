@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.official;
 
+import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+
+import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -48,8 +51,7 @@ public class WABOTAutonomous extends LinearOpMode {
     // This value is the distance of 1 rev of the wheels measured in INCH!!!!
     private final double CIRCUMFERENCE = Math.PI*DIAMETER;
 
-    // Our custom vuforia object
-    private WABOTVuforia vuforia;
+    private ThreeTrackingWheelLocalizer localizer;
 
     // Hardware map object
     private WABOTHardware h;
@@ -262,7 +264,7 @@ public class WABOTAutonomous extends LinearOpMode {
 
 
     // Position the Robot According to Vuforia marker
-    private void vuforiaPosition(int posX){
+    /*private void vuforiaPosition(int posX){
         if(vuforia.translation.get(1) > posX){
             linearDrive(-0.2f);
         } else  if(vuforia.translation.get(1) < posX){
@@ -274,7 +276,7 @@ public class WABOTAutonomous extends LinearOpMode {
         }
 
         stopMotors();
-    }
+    }*/
 
 
 
