@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.official;
 
-import com.disnodeteam.dogecv.detectors.skystone.SkystoneDetector;
+//import com.disnodeteam.dogecv.detectors.skystone.SkystoneDetector;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
